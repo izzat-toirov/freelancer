@@ -37,7 +37,7 @@ model user {
   reviews_received       review[]       @relation("reviewee")
   notifications          notification[]
   payments_made          payment[]      @relation("payments_buyer")
-  messages               message[]
+  messages               message[]      @relation("user_messages")
   disputes               dispute[]      @relation("dispute_raisedBy")
   admin_logs             admin_log[]    @relation("admin_logs_user")
 
@@ -191,7 +191,7 @@ model message {
   id              BigInt       @id @default(autoincrement()) @db.BigInt
   conversation    conversation @relation(fields: [conversation_id], references: [id])
   conversation_id BigInt       @db.BigInt
-  sender          user         @relation(fields: [sender_id], references: [id])
+  sender          user         @relation("user_messages", fields: [sender_id], references: [id])
   sender_id       BigInt       @db.BigInt
   content         String?      @db.Text
   attachments     String?      @db.Text
@@ -201,6 +201,7 @@ model message {
 
   @@map("messages")
 }
+
 
 model review {
   id          BigInt  @id @default(autoincrement()) @db.BigInt

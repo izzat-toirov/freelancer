@@ -8,8 +8,8 @@ export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
   @Post()
-  create(@Body() createMessageDto: CreateMessageDto) {
-    return this.messageService.create(createMessageDto);
+  create(@Body() dto: CreateMessageDto) {
+    return this.messageService.create(dto);
   }
 
   @Get()
@@ -19,16 +19,16 @@ export class MessageController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.messageService.findOne(+id);
+    return this.messageService.findOne(BigInt(id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
-    return this.messageService.update(+id, updateMessageDto);
+  update(@Param('id') id: string, @Body() dto: UpdateMessageDto) {
+    return this.messageService.update(BigInt(id), dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.messageService.remove(+id);
+    return this.messageService.remove(BigInt(id));
   }
 }
