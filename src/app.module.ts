@@ -15,6 +15,8 @@ import { ReviewModule } from './review/review.module';
 import { NotificationModule } from './notification/notification.module';
 import { DisputeModule } from './dispute/dispute.module';
 import { AdminLogModule } from './admin-log/admin-log.module';
+import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -36,7 +38,9 @@ import { AdminLogModule } from './admin-log/admin-log.module';
     ReviewModule,
     NotificationModule,
     DisputeModule,
-    AdminLogModule
+    AdminLogModule,
+    AuthModule,
+    MailModule
   ],
   controllers: [],
   providers: [],
