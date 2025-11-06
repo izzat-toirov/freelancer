@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { UserRole, UserStatus } from '@prisma/client';
 
 export class CreateUserDto {
@@ -32,12 +32,18 @@ export class CreateUserDto {
   @IsEnum(UserRole)
   role?: UserRole;
 
-  @ApiPropertyOptional({ example: 'https://example.com/avatar.jpg', description: 'Avatar URL' })
+  @ApiPropertyOptional({
+    example: 'https://example.com/avatar.jpg',
+    description: 'Avatar URL (ixtiyoriy maydon)',
+  })
   @IsOptional()
-  @IsString()
+  @IsUrl()
   avatar_url?: string;
 
-  @ApiPropertyOptional({ example: 'Frontend dasturchi, 3 yillik tajriba', description: 'Bio yoki qisqa tavsif' })
+  @ApiPropertyOptional({
+    example: 'Frontend dasturchi, 3 yillik tajriba',
+    description: 'Bio yoki qisqa tavsif',
+  })
   @IsOptional()
   @IsString()
   bio?: string;

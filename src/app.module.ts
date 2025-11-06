@@ -24,6 +24,7 @@ import { MailModule } from './mail/mail.module';
       envFilePath: ".env",
       isGlobal: true,
     }),
+    AuthModule,
     UsersModule,
     PrismaModule,
     ProfileModule,
@@ -39,7 +40,6 @@ import { MailModule } from './mail/mail.module';
     NotificationModule,
     DisputeModule,
     AdminLogModule,
-    AuthModule,
     MailModule
   ],
   controllers: [],
