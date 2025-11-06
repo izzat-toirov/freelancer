@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PaymentService } from './payment.service';
+import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
+import { PaymentsService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { ApiTags, ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
 
-@Controller('payment')
-export class PaymentController {
-  constructor(private readonly paymentService: PaymentService) {}
+@ApiTags('Payments')
+@Controller('payments')
+export class PaymentsController {
+  constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post()
-  create(@Body() createPaymentDto: CreatePaymentDto) {
-    return this.paymentService.create(createPaymentDto);
+  @ApiOperation({ summary: 'Create a new payment' })
+  @ApiBody({ type: CreatePaymentDto })
+  create(@Body() dto: CreatePaymentDto) {
+    return this.paymentsService.create(dto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all payments' })
   findAll() {
-    return this.paymentService.findAll();
+    return this.paymentsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentService.findOne(+id);
+  @ApiOperation({ summary: 'Get payment by ID' })
+  @ApiParam({ name: 'id', type: Number })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.paymentsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentService.update(+id, updatePaymentDto);
+  @ApiOperation({ summary: 'Update a payment by ID' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiBody({ type: UpdatePaymentDto })
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdatePaymentDto) {
+    return this.paymentsService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.paymentService.remove(+id);
+  @ApiOperation({ summary: 'Delete a payment by ID' })
+  @ApiParam({ name: 'id', type: Number })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.paymentsService.remove(id);
   }
 }

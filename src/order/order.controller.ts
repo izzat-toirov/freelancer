@@ -1,34 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OrderService } from './order.service';
+import { Controller, Post, Get, Body, Param, Delete, Patch, Query } from '@nestjs/common';
+import { OrdersService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { QueryOrdersDto } from './dto/query-orders.dto';
+import { UserRole } from '@prisma/client';
 
-@Controller('order')
-export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+@Controller('orders')
+export class OrdersController {
+  constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  create(@Body() dto: CreateOrderDto) {
+    const role = UserRole.CLIENT;
+    return this.ordersService.create(dto, role);
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  findAll(@Query() query: QueryOrdersDto) {
+    return this.ordersService.findAll(query);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+    return this.ordersService.findOne(Number(id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+  update(@Param('id') id: string, @Body() dto: UpdateOrderDto) {
+    const role = UserRole.ADMIN;
+    return this.ordersService.update(Number(id), dto, role);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+    const role = UserRole.SUPER_ADMIN;
+    return this.ordersService.remove(Number(id), role);
   }
 }

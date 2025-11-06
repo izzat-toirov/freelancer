@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GigService } from './gig.service';
+import { Controller, Post, Body, UsePipes, ValidationPipe, Get, Query, Param, ParseIntPipe, Put, Delete, Req, UseGuards } from '@nestjs/common';
+import { GigsService } from './gig.service';
 import { CreateGigDto } from './dto/create-gig.dto';
 import { UpdateGigDto } from './dto/update-gig.dto';
+import { QueryGigsDto } from './dto/query-gigs.dto';
 
-@Controller('gig')
-export class GigController {
-  constructor(private readonly gigService: GigService) {}
+/**
+ * NOTE:
+ * - Bu controller misol uchun oddiy: auth middleware/guard mavjud deb hisoblayman.
+ * - `req.user` ichida `{ id, role }` mavjud bo'lishi kerak (orma: auth strategy orqali).
+ */
+
+@Controller('gigs')
+export class GigsController {
+  constructor(private readonly gigsService: GigsService) {}
 
   @Post()
-  create(@Body() createGigDto: CreateGigDto) {
-    return this.gigService.create(createGigDto);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async create(@Body() createDto: CreateGigDto, @Req() req: any) {
+    const authUser = req.user; // { id, role } - auth layer taqdim etishi kerak
+    return this.gigsService.create(createDto, authUser);
   }
 
   @Get()
-  findAll() {
-    return this.gigService.findAll();
+  async findAll(@Query() query: QueryGigsDto) {
+    return this.gigsService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gigService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.gigsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGigDto: UpdateGigDto) {
-    return this.gigService.update(+id, updateGigDto);
+  @Put(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateGigDto, @Req() req: any) {
+    const authUser = req.user;
+    return this.gigsService.update(id, updateDto, authUser);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.gigService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    const authUser = req.user;
+    return this.gigsService.remove(id, authUser);
   }
 }
