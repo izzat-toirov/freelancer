@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -30,7 +31,12 @@ export class ReviewController {
   @ApiBody({ type: CreateReviewDto })
   @ApiResponse({ status: 201, description: 'Review successfully created' })
   async create(@Body() dto: CreateReviewDto) {
-    return this.reviewService.create(dto);
+    try {
+      return await this.reviewService.create(dto);
+    } catch (error) {
+      console.error('❌ Create Review Controller Error:', error);
+      throw new InternalServerErrorException('Failed to create review');
+    }
   }
 
   // 🟡 FIND ALL
@@ -38,7 +44,12 @@ export class ReviewController {
   @ApiOperation({ summary: 'Get all reviews' })
   @ApiResponse({ status: 200, description: 'List of all reviews' })
   async findAll() {
-    return this.reviewService.findAll();
+    try {
+      return await this.reviewService.findAll();
+    } catch (error) {
+      console.error('❌ Find All Reviews Controller Error:', error);
+      throw new InternalServerErrorException('Failed to fetch reviews');
+    }
   }
 
   // 🔵 FIND ONE
@@ -47,7 +58,12 @@ export class ReviewController {
   @ApiParam({ name: 'id', example: 1, description: 'Review ID' })
   @ApiResponse({ status: 200, description: 'Single review data' })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.reviewService.findOne(BigInt(id));
+    try {
+      return await this.reviewService.findOne(Number(id));
+    } catch (error) {
+      console.error('❌ Find Review Controller Error:', error);
+      throw new InternalServerErrorException('Failed to fetch review');
+    }
   }
 
   // 🟠 UPDATE
@@ -60,7 +76,12 @@ export class ReviewController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateReviewDto,
   ) {
-    return this.reviewService.update(BigInt(id), dto);
+    try {
+      return await this.reviewService.update(Number(id), dto);
+    } catch (error) {
+      console.error('❌ Update Review Controller Error:', error);
+      throw new InternalServerErrorException('Failed to update review');
+    }
   }
 
   // 🔴 DELETE
@@ -69,6 +90,11 @@ export class ReviewController {
   @ApiParam({ name: 'id', example: 1 })
   @ApiResponse({ status: 200, description: 'Review successfully deleted' })
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return this.reviewService.remove(BigInt(id));
+    try {
+      return await this.reviewService.remove(Number(id));
+    } catch (error) {
+      console.error('❌ Delete Review Controller Error:', error);
+      throw new InternalServerErrorException('Failed to delete review');
+    }
   }
 }
