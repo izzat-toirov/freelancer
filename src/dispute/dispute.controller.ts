@@ -18,29 +18,25 @@ export class DisputeController {
 
   @Get()
   @ApiOperation({ summary: 'Get all disputes' })
-  @ApiResponse({ status: 200, description: 'List of all disputes' })
   findAll() {
     return this.disputeService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get dispute by ID' })
-  @ApiResponse({ status: 200, description: 'Single dispute record' })
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.disputeService.findOne(BigInt(id));
+    return this.disputeService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a dispute' })
-  @ApiResponse({ status: 200, description: 'Dispute updated successfully' })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateDisputeDto) {
-    return this.disputeService.update(BigInt(id), dto);
+    return this.disputeService.update(id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a dispute' })
-  @ApiResponse({ status: 200, description: 'Dispute deleted successfully' })
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.disputeService.remove(BigInt(id));
+    return this.disputeService.remove(id);
   }
 }
