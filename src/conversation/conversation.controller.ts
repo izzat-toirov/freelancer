@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ConversationService } from './conversation.service';
 import { CreateConversationDto } from './dto/create-conversation.dto';
@@ -24,19 +24,19 @@ export class ConversationController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get one conversation by ID' })
-  findOne(@Param('id') id: string) {
-    return this.conversationService.findOne(BigInt(id));
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.conversationService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update conversation by ID' })
-  update(@Param('id') id: string, @Body() dto: UpdateConversationDto) {
-    return this.conversationService.update(BigInt(id), dto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateConversationDto) {
+    return this.conversationService.update(id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete conversation by ID' })
-  remove(@Param('id') id: string) {
-    return this.conversationService.remove(BigInt(id));
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.conversationService.remove(id);
   }
 }

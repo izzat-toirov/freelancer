@@ -13,7 +13,7 @@ enum UserRole {
   ADMIN
   SUPER_ADMIN
 }
-
+// sdrtfygutrdfyguhyi
 enum UserStatus {
   ACTIVE
   BLOCKED
@@ -81,7 +81,7 @@ model user {
   password   String     @db.VarChar(255)
   role       UserRole   @default(CLIENT)
   status     UserStatus @default(PENDING)
-  isActive   Boolean    @default(true)
+  isActive   Boolean    @default(false)
   avatar_url String?    @db.Text
   bio        String?    @db.Text
   hashedRefreshToken String?

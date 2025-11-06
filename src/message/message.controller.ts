@@ -19,16 +19,16 @@ export class MessageController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.messageService.findOne(BigInt(id));
+    return this.messageService.findOne(Number(id));
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateMessageDto) {
-    return this.messageService.update(BigInt(id), dto);
+    return this.messageService.update(Number(id), dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.messageService.remove(BigInt(id));
+    return this.messageService.remove(Number(id));
   }
 }
