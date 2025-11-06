@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Injectable()
-export class PaymentService {
-  create(createPaymentDto: CreatePaymentDto) {
-    return 'This action adds a new payment';
+export class PaymentsService {
+  constructor(private prisma: PrismaService) {}
+
+  async create(dto: CreatePaymentDto) {
+    try {
+      return await this.prisma.payment.create({ data: dto });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findAll() {
-    return `This action returns all payment`;
+  async findAll() {
+    try {
+      return await this.prisma.payment.findMany();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
+  async findOne(id: number) {
+    try {
+      const payment = await this.prisma.payment.findUnique({ where: { id } });
+      if (!payment) throw new NotFoundException(`Payment with ID ${id} not found`);
+      return payment;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
+  async update(id: number, dto: UpdatePaymentDto) {
+    try {
+      await this.findOne(id); // Not found tekshirish
+      return await this.prisma.payment.update({ where: { id }, data: dto });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} payment`;
+  async remove(id: number) {
+    try {
+      await this.findOne(id); // Not found tekshirish
+      return await this.prisma.payment.delete({ where: { id } });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }
