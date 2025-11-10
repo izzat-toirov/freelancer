@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -13,6 +13,7 @@ enum UserRole {
   ADMIN
   SUPER_ADMIN
 }
+
 // sdrtfygutrdfyguhyi
 enum UserStatus {
   ACTIVE
@@ -74,20 +75,20 @@ enum DisputeStatus {
 }
 
 model user {
-  id         Int        @id @default(autoincrement()) @db.Integer
-  full_name  String?    @db.VarChar(100)
-  username   String?    @unique @db.VarChar(50)
-  email      String?    @unique @db.VarChar(100)
-  password   String     @db.VarChar(255)
-  role       UserRole   @default(CLIENT)
-  status     UserStatus @default(PENDING)
-  isActive   Boolean    @default(false)
-  avatar_url String?    @db.Text
-  bio        String?    @db.Text
+  id                 Int        @id @default(autoincrement()) @db.Integer
+  full_name          String?    @db.VarChar(100)
+  username           String?    @unique @db.VarChar(50)
+  email              String?    @unique @db.VarChar(100)
+  password           String     @db.VarChar(255)
+  role               UserRole   @default(CLIENT)
+  status             UserStatus @default(PENDING)
+  isActive           Boolean    @default(false)
+  avatar_url         String?    @db.Text
+  bio                String?    @db.Text
   hashedRefreshToken String?
-  country    String?    @db.VarChar(50)
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
+  country            String?    @db.VarChar(50)
+  created_at         DateTime   @default(now())
+  updated_at         DateTime   @updatedAt
 
   profile               profile?
   gigs                  gig[]
@@ -140,6 +141,7 @@ model gig {
   thumbnail      String?   @db.Text
   images         String[]
   status         GigStatus @default(ACTIVE)
+  isActive       Boolean   @default(false)
   created_at     DateTime  @default(now())
 
   user     user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -306,7 +308,6 @@ model admin_logs {
 
   @@map("admin_logs")
 }
-
 
 model dispute {
   id          Int           @id @default(autoincrement()) @db.Integer
